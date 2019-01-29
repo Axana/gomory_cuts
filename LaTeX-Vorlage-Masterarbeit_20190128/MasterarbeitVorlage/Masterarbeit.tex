@@ -1,0 +1,206 @@
+\documentclass[12pt,oneside,ngerman,reqno,a4paper]{article}
+
+\newcommand{\pim}{P^t_{\text{im}}}
+\newcommand{\pchpex}{P^t_{\text{chp-ex}}}
+\newcommand{\pchpe}{P^t_{\text{chp-e}}}
+\newcommand{\ple}{P^t_{\text{le}}}
+\newcommand{\plh}{P^t_{\text{lh}}}
+\newcommand{\plhm}{P^{t-1}_{\text{lh}}}
+\newcommand{\bpchpe}{\bar P^t_{\text{chp-e}}}
+\newcommand{\hpchpe}{\hat P^t_{\text{chp-e}}}
+\newcommand{\pchph}{P^t_{\text{chp-h}}}
+\newcommand{\bpchph}{\bar P^t_{\text{chp-h}}}
+\newcommand{\hpchph}{\hat P^t_{\text{chp-h}}}
+\newcommand{\pchp}{P^t_{\text{chp}}}
+\newcommand{\pboil}{P^t_{\text{boiler}}}
+\newcommand{\bpboil}{\bar P^t_{\text{boiler}}}
+\newcommand{\phsuc}{P^t_{\text{hsu-c}}}
+\newcommand{\phsucm}{P^{t-1}_{\text{hsu-c}}}
+\newcommand{\pbatc}{P^t_{\text{bat-c}}}
+\newcommand{\bpbatc}{\bar P^t_{\text{bat-c}}}
+\newcommand{\pbatcm}{P^{t-1}_{\text{bat-c}}}
+\newcommand{\pbatd}{P^t_{\text{bat-d}}}
+\newcommand{\bpbatd}{\bar P^t_{\text{bat-d}}}
+\newcommand{\pbatdm}{P^{t-1}_{\text{bat-d}}}
+\newcommand{\zon}{z^t_{\text{on}}}
+\newcommand{\zonm}{z^{t-1}_{\text{on}}}
+\newcommand{\zup}{z^t_{\text{up}}}
+\newcommand{\pchpem}{P^{t-1}_{\text{chp-e}}}
+\newcommand{\gcpp}{\gamma_{\text{cpp}}}
+\newcommand{\gret}{\gamma_{\text{ret}}}
+\newcommand{\gsubchp}{\gamma_{\text{sub-chp}}}
+\newcommand{\gfit}{\gamma_{\text{fit-chp}}}
+\newcommand{\ggas}{\gamma_{\text{gas}}}
+\newcommand{\gtax}{\gamma_{\text{tax}}}
+\newcommand{\geex}{\gamma_{\text{eex}}}
+\newcommand{\etachpeh}{\eta_{\text{chp-e-h}}}
+\newcommand{\etachp}{\eta_{\text{chp}}}
+\newcommand{\etabatc}{\eta_{\text{bat-c}}}
+\newcommand{\etabatd}{\eta_{\text{bat-d}}}
+\newcommand{\etahsuc}{\eta_{\text{hsu-c}}}
+\newcommand{\etahsud}{\eta_{\text{hsu-d}}}
+\newcommand{\hst}{H_{\text{start}}}
+\newcommand{\est}{E_{\text{start}}}
+\newcommand{\abat}{\alpha_{\text{bat}}}
+\newcommand{\ahsu}{\alpha_{\text{hsu}}}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amsthm}     % ams stuff should be before font loading
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}        % should be after font loading
+\usepackage{fixltx2e,babel}
+\usepackage[numbers]{natbib}    % bibtex package
+%\usepackage{typearea}           % custom type area
+%   \areaset[0mm]{135mm}{210mm}  % typearea configuration
+%   \topmargin5mm                % typearea configuration
+\usepackage{graphicx}
+\usepackage{url}
+
+\usepackage{ifpdf}
+\ifpdf
+  \pdfminorversion=5
+  \pdfoutput=1
+% Diese Pakete laufen anscheinend nur mit pdflatex gescheit
+    \usepackage[bitstream-charter]{mathdesign}
+    \usepackage[pdfusetitle,colorlinks=true,linktoc=all]{hyperref}
+\else
+    \usepackage{times}
+    \usepackage[dvips,ps2pdf,linktoc=all]{hyperref}
+
+\fi
+
+\ifdefined\hypersetup
+  \hypersetup{
+    pdfkeywords={}, linkcolor=black, citecolor=black, filecolor=black, urlcolor=black,
+  }
+\fi
+
+
+\usepackage{fancyhdr}
+
+% Das ist nur fuer den Blindtext zustaending
+\usepackage{blindtext}
+
+
+% Blattlayout
+\textwidth15cm
+\textheight23cm
+\topmargin0cm
+\oddsidemargin0.5cm
+\evensidemargin0.5cm
+
+% Einzug f"ur den Absatz
+\parindent0em
+\parskip0.5em
+% Header, Footer
+\usepackage{fancyhdr}
+ % Text in Kopfzeile aussen
+\fancyhead[LE,RO]{\nouppercase{\leftmark} }
+% Text in Kopfzeile innen
+\fancyhead[RE,LO]{}
+% Text in Fusszeile mittig
+\fancyfoot[CE,CO]{\thepage}
+\pagestyle{fancy}
+
+
+\begin{document}
+
+\pagenumbering{Alph}
+\renewcommand{\thepage}{C-\Roman{page}}
+\begin{titlepage}
+      \textsf{
+    \begin{center}
+      \vspace*{1cm}
+    \huge \textbf{Kosteneffizienter Betrieb von Smart Grids mit Gomory Schnittebenen} \\
+    \vspace{2cm}
+    \LARGE\textbf{Master-Arbeit}\\[5mm]
+    \Large zur Erlangung des Grades\\[5mm]
+    \textbf{Master of Science (M.Sc.) \\[5mm]
+    im Studiengang
+    Wirtschaftsmathematik\\[5mm]
+    }
+    am Department Mathematik der\\ Friedrich-Alexander-Universität
+    Erlangen-Nürnberg\\[1cm]
+    vorgelegt am 04.02.2019 \\[3mm]
+    von \textbf{Annemarie Kronhardt}
+  %  \vspace{2.5cm}
+  %  \vspace{3cm}
+    \vfill
+    \normalsize
+    Betreuer: Prof. Dr. Martin Schmidt
+    \\[2em]
+    \end{center}
+%
+    \begin{minipage}{0.36\textwidth}
+    \vspace*{10mm}
+    \includegraphics[width=\textwidth]{logo/FAU_nat}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.3\textwidth}
+    \includegraphics[width=\textwidth]{logo/DepMathLogo} \\[3mm]
+    \end{minipage}
+}
+\end{titlepage}
+
+
+\pagenumbering{Roman}
+
+\clearpage
+\tableofcontents
+
+\clearpage
+\pagenumbering{arabic}
+
+
+%\input{kap01/kapitel01}
+%\clearpage
+\input{kap02/kapitel02}
+\clearpage
+\input{kap03/kapitel03}
+\clearpage
+\input{kap04/kapitel04}
+\clearpage
+\input{kap05/kapitel05}
+\clearpage
+\input{KapZus/kapitelZusammenfassung}
+\clearpage
+
+
+\clearpage
+\urlstyle{same}
+% Sollen Literaturnachweise eingebunden werden, die nicht zitiert wurden,
+% so kann der Befehl \nocite{} verwendet werden.
+%\bibliographystyle{plainurl}
+% Fuer deutschsprachige Texte fast besser geeignet
+
+\bibliographystyle{natdin}
+
+\bibliography{bibliography}
+\addcontentsline{toc}{section}{Literatur}
+
+% Erklärung 
+
+\clearpage\thispagestyle{empty}
+
+
+
+\begin{center}\textbf{\large Erklärung}\end{center}
+
+\noindent
+Hiermit versichere ich, dass ich die vorliegende Arbeit selbstständig verfasst
+und keine anderen als die angegebenen Quellen und Hilfsmittel benutzt habe,
+dass alle Stellen der Arbeit, die wörtlich oder sinngemäß aus anderen Quellen
+übernommen wurden, als solche kenntlich gemacht sind und dass die Arbeit in
+gleicher oder ähnlicher Form noch keiner Prüfungsbehörde vorgelegt wurde.
+
+\vspace{4\baselineskip}
+
+\noindent
+Erlangen, den \today \hspace*{2cm} Hierher die Unterschrift
+
+% Lebenslauf
+
+\clearpage
+\input{CV}
+\addcontentsline{toc}{section}{Lebenslauf}
+\end{document}

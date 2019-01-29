@@ -1,0 +1,184 @@
+\section{Mathematische Modellierung und L"osungsansatz}
+Im ersten Kapitel modellieren wir die "okonomischen und gegebenenfalls technischen Anforderungen der beiden Akteure. Die wird bedingt durch die Struktur der Problematik in einem zweistufigen Optimierungsproblem resultieren. Die Tarifbedingungen sind teilweise extern festgelegt und im Rahmen dieses Problems nicht variabel. Was allerdings durch den Stromlieferanten jewils einen Tag zuvor beeinflusst werden kann, ist einzig die H"ohe der CPP-Preisaufschl"age. Somit befindet er sich in der Position der oberen Stufe. Selbstverst"andlich kann der Aufschlag nicht beliebig hoch werden, da der Lieferant seine Wettbewerbsf"ahigkeit erhalten muss und somit ergibt sich f"ur ihn als Bedingung die Optimalit"at der Vertragsbedingungen f"ur den Prosumer auf der unteren Stufe. Das bedeutet, wir erhalten eine Struktur 
+
+\begin{align*}
+\max_{x} & f_L(x,y)\\
+\text{s.t.} & a_Lx \leq b_L\\
+& x \in \text{argmax}_y \{f_P(x,y), A_Py \leq b_P, y \geq 0\}\\
+& x,y \geq 0
+\end{align*}
+Definitionsmenge der Variablen oberer Stufe $x \in X$ und unterer Stufe $y \in Y$ seien vorerst nicht weiter spezifiziert. $f_L:X \rightarrow \X'$ sei die Zielfunktion des Lieferanten, $f_L:Y \rightarrow \Y'$
+die des Prosumers. Die Nebenbedingungen sind jeweils durch Matrizen $a_L$ bzw. $A_P$ sowie zugeh"orige rechte Seite $b_L$ und $b_P$ dargestellt. 
+Kommen wir zur genaueren Problemmodellierung, beginnend mit der oberen Stufe, also dem Lieferanten.
+\subsection{Modellierung der Gesch"aftsbedingungen des Lieferanten}
+Im Hinblick auf die Tarifgestaltung hat der Stromlieferant keine technischen Einschr"ankungen auf seiner Seite zu beachten. Vielmehr interessiert ihn der Gewinn, der ausgesch"opft werden kann, der aus der Differenz von Einnahmen und Ausgaben besteht. Letztere sind hierbei die Kosten f"ur Strombedarf zum st"undlich variierenden EEX-Energiepreis. Zur Berechnung der Einnahme muss zeitlich zwischen Critical-Peak-Zeiten, in denen ein Aufschlag berechnet werden darf, und den restlichen Offpeak-Zeitspannen unterschieden werden. 
+
+\subsection{Mathematische Modellierung der tariflichen Anforderungen}
+Zu Beginn stellen wir den Betrieb des Microgrids als Optimierungsproblem auf. Zur vereinfachten Modellierung gehen wir von einem Prosumer aus, der mithilfe einer KWK sowohl W"arme als auch Energie erzeugen kann. Zun"achst ist es sinnvoll einen Zeitrahmen f"ur die Modellierung festzulegen; hier nehmen wir einen 24-st"undigen Tag und legen Zeitpunkte fest, an den der Prosumer seine Anlage steuern darf, um Einfluss auf sein eigenes Netz Einfluss nehmen zu k"onnen. 
+Dazu diskretisieren wir den Tag durch eine Menge von $k \in \mathbb{N}$ Zeitpunkten $T=\{t_0, t_1,...,t_{k-1},t_k\}$, wobei $t_0=0$ und $t_k=t_e$ den ersten bzw. letzten Zeitpunkt eines ganzen Tages darstellen. Somit ergeben sich $k+1$ Zeitpunkte pro Tag sowie $k$ Zeitabschnitte $\Delta t_i:= t_i - t_{i-1}$ f"ur $i \in \{1,...,k\}$. Hier wollen wir eine "aquidistante Verteilung der Zeitpunkte festlegen, wodurch die Abschnitte die gleiche L"ange bekommen $\Delta t \equiv \Delta t_i \, \forall i \in \{1,...,k\}$. Au"serdem wollen wir die Zeitmenge ohne den Anfangspunkt $T_0$ als $T^0=\{t_1,...,t_k\}$ definieren. 
+Nun formulieren wir die technischen Anforderungen an den Energiehaushalt des Prosumers, beginnend mit der Zielfunktion. Die ben"otigten Parameter und Variablen sind den folgenden Tabellen zu entnehmen.
+
+\begin{tabular}{l l}
+\multicolumn{2}{l}{Parameter der Zielfunktion(\ref{proear})-(\ref{procos})}\\
+\hline
+Bezeichnung & Bedeutung \\
+\hline
+$\geex$ & tagesdurchschnittlicher EEX-Preis  \\
+$\gfit$ & Tarif f"ur exportierten Strom \\
+$\ggas$ & Preis f"ur Erdgas zum Betrieb der KWK  \\
+$\gret$ & Preis, den der Retailer erh"alt \\
+$\gsubchp$ & erhaltene Substitutionen f"ur Energieerzeugung mit KWK \\
+$\gtax$ & Steuern f"ur importierte Energie \\
+$\zeta$ & Verh"altnis Strom zu W"arme bei Energieerzeugung mit KWK \\
+$\etachp$ & Gesamteffizienzfaktor Energieerzeugung mit KWK \\
+$g^{chp}$ & verbrauchte Menge Erdgas beim Hochfahren der KWK \\
+$k$ & Anteil von $\hpchpe$, minimale Produktionsmenge bei Betrieb der KWK  \\\\
+\multicolumn{2}{l}{Variablen der Zielfunktion(\ref{proear})-(\ref{procos})}\\
+\hline
+Bezeichnung & Bedeutung \\
+\hline
+$\pim$ & importierte Energie \\
+$\pchpe$ & erzeugte Energie \\
+$\pchpex$ & exportierte Energie
+\end{tabular}
+\begin{align}
+\label{proear} & \max && \sum_{t \in T} \gfit \pchpex + \gsubchp \pchpe  \\ &&& - (\ggas (1 + \zeta) \frac{\pchpe}{\etachp} g^{\text{chp}} \zup + (\gtax + \gret + \gcpp) \pim ) 
+\label{procos}
+\end{align}
+(\ref{proear}) beschreibt die Einnahmen des Prosumers, bestehend aus Subventionen f"ur Energieerzeugung und Preis f"ur exportierten Strom (\ref{procos}) die Kosten. Dazu geh"ort der Preis, den der Retailer erh"alt, eventueller CPP-Aufschlag, Steuern, jeweils f"ur entsprechende importierte Mengen. Hinzu kommen noch Kosten f"ur den Betrieb der KWK, das hei"st Erdgas unter Einfluss von Effizienzfaktoren in Abh"angigkeit von produzierter Energiemengen. Die nachfolgenden Bedingungen betreffen die Energieproduktion der KWK.
+
+\begin{tabular}{l l}
+\multicolumn{2}{l}{Parameter der KWK-Nebenbedingungen}\\
+\hline
+Bezeichnung & Bedeutung \\
+\hline
+$\ahsu$ & Entladungsrate des W"armespeichers \\
+$\zeta$ & Verh"altnis Strom zu W"arme bei Energieerzeugung mit KWK \\
+$k$ & $\in [0,1]$ Anteil der Produktionskapazit"at, ergibt minimale Produktionsmenge  \\
+$\hpchpe$ & maximale Produktionsmenge Strom \\
+$\bpchpe$ & maximale Produktionsmenge Strom nach Umwandlung von W"arme  \\\\
+\multicolumn{2}{l}{Variablen der KWK-Nebenbedingungen}\\
+\hline
+Bezeichnung & Bedeutung \\
+\hline
+$\pchpe$ & erzeugter Strom \\
+$\pchph$ & erzeugte W"arme \\
+$\pchpex$ & exportierte Energie \\
+$\zon$ & Bin"arvariabl,e zeigt Betriebsstatus der KWK an \\
+$\zup$ & Bin"arvariable, zeigt Status des Hochfahrens an
+\end{tabular}
+
+Die Variablen $\zon$ bzw. $\zup$ steuern die Anlage. Sie sind folgenderma"sen festgelegt.
+
+\begin{align*}
+\zon = \left \{ 
+\begin{tabular}{l}
+1, \text{falls sich KWK im aktiven Modus befindet} \\
+0, \text{falls sich KWK im inaktiven Modus befindet}
+\end{tabular}
+\right.
+\forall t \in T \text{.}
+\end{align*}
+
+Falls die Anlage hochgefahren wird, also aus dem inaktiven in den aktiven Zustand wechselt, entstehen zus"atzliche Start-Up-Kosten. Hierf"ur soll es eine weitere Bin"arvariable $\zup$ geben mit 
+
+\begin{align*}
+\zup = \left \{
+\begin{tabular}{l}
+1, \text{falls KWK zu t aktiv ist und zu} t-1 \text{hochgefahren wurde}\\
+0 \text{sonst} 
+\end{tabular} \right.
+\forall t \in T \text{.}
+\end{align*}
+Somit modellieren wir die Funktionen der KWK wie folgt.
+\begin{align}
+& \pchpex - \pchpe &&\leq 0 \; \forall t \in T \label{chpexupper}\\
+& \pchpe - \bpchpe \zon \Delta t &&\leq 0 \; \forall t \in T \label{chpeupper}\\
+& k \bpchpe \Delta \zon t - \pchpe &&\leq 0 \; \forall t \in T \label{chpelower}\\
+& \pchph - \zeta \pchpe &&\leq 0 \; \forall t \in T \label{chphupper} \\
+& \zon - \zonm - \zup &&\leq 0 \; \forall t \in T^0 \label{zuplower} \\
+\end{align}
+
+(\ref{chpexupper}) beschr"ankt den Energieexport auf die verf"ugbare generierte Energie. (\ref{chpeupper}) stellt sicher, dass die Energieproduktion im abgestellten Modus auf Null gedr"uckt wird und bei Aktivit"at die maximale Produktionsmenge pro Zeitintervall nicht "uberschreitet. Zus"atzlich ist bei Betrieb der KWK eine minimale Produktionsmenge durch einen Bruchteil $k$ des Maximums vorgeschrieben, das mit (\ref{chpelower}) sichergestellt ist. Analog zur Stromregelung (\ref{chpeupper}) beschreibt (\ref{chphupper}) die Regelung der W"armeproduktion in Abh"angigkeit vom KWK-Betrieb. Diese ist ein Nebenprodukt der Energiegewinnung und mit dem Faktor $\zeta$ von dieser linear abh"angig. Mithilfe der Bedingung (\ref{zuplower}) wird $\zup = 1$ genau dann, wenn die KWK zum Zeitpunkt $t-1$ au"ser Betrieb ist und zu $t$ arbeitet, also $\zonm = 0$, $\zon = 1$. Da $\zup=1$ die Zielfunktion nachteilig beeinflusst, wird die Variable nur unter Notwendigkeit nach oben gedr"uckt. Als n"achstes betrachten wir die Regulierung der Batterie, also der Stromspeicherung.
+
+
+
+\begin{tabular}{l l}
+\multicolumn{2}{l}{Parameter der Batteriebedingungen}\\
+\hline
+Bezeichnung & Bedeutung \\
+\hline
+$\abat$ & Entladungsrate des Energiespeichers \footnote{"Uber Zeit entsteht ein Verlust durch Selbstentladung} \\
+$\etabatc$ & Effizienzfaktor Aufladung des Stromspeichers  \\
+$\etabatd$ & Effizienzfaktor Entladung des Stromspeichers  \\
+$\bar E$ & maximale Kapazit"at Stromspeicher \\
+$E_{\text{start}}$& Initialwert Batterie \\
+$\bpbatc$ & maximale Aufladekapazit"at \\
+$\bpbatd$ & maximale Entladekapazit"at \\\\
+\multicolumn{2}{l}{Variablen der Batteriebedingungen}\\
+\hline
+Bezeichnung & Bedeutung \\
+\hline
+$E^t$ & Energiestand in der Batterie \\
+$\pbatc$ & der Batterie zugf"uhrte Energie \\
+$\pbatd$ & Aus der Batterie entladene Energie \\
+\end{tabular}
+
+
+\begin{align}
+& \pbatc - \bpbatc \Delta t && \leq 0 \; \forall	 t \in T \label{pbatcup} \\
+& \pbatd - \bpbatd \Delta t && \leq 0 \; \forall	 t \in T \label{pbatdup} \\
+& E^t - (1-\abat) E^{t-1} + \frac{\pbatdm}{\etabatd} - \pbatcm \etabatc &&= 0 \; \forall t \in T^0 \label{batbal} \\
+& 0 \leq E^t \leq \bar E && \forall t \in T \label{Ebd}\\
+& E^{t_0} - E_\text{start} &&= 0 \label{initbat}\\
+& E_\text{start} - (1-\abat) E^{t_e} + \frac{P^{t_e}_{\text{bat-d}}}{\etabatd} -\etabatc P^{t_e}_{\text{bat-c}}   &&\leq 0 \label{battermlo}\\
+& (1-\abat) E^{t_e} - \frac{P^{t_e}_{\text{bat-d}}}{\etabatd} + \etabatc P^{t_e}_{\text{bat-c}}  - \bar E  &&\leq 0 \label{battermup}
+\end{align}
+
+(\ref{pbatcup}) beschr"ankt die Aufladung der Batterie, (\ref{pbatdup}) entsprechend die Entladung, abh"angig von L"ange einer Zeiteinheit und einer jeweils festgelegten maximalen Kapazit"at. (\ref{batbal}) ist eine Gleichgewichtsbedingung f"ur die Batterie, konkret entspricht der Pegel zu Zeitpunkt $t \in T$ dem des Stands zu $t-1$ unter Hinzukommen von aufgeladener Energie und abz"uglich der Entladung. Alles ist mit entsprechenden Effizienzfaktoren versehen. (\ref{Ebd}) beschr"ankt den Batteriestand auf die maximale Kapazit"at und fordert Nichtnegativit"at der Variable $E^t$.
+Durch die Restriktion (\ref{initbat}) wird dem Batteriestand zum Zeitpunkt $t_0$ ein Initialwert zugewiesen. Die Restriktionen (\ref{battermlo})-(\ref{battermup}) regulieren hingegen den Wert zum letzten Zeitpunkt des Tages $t_e$.
+
+F"ur den W"armespeicher gelten entsprechende Bedingungen und sind analog aufgebaut.
+
+\begin{tabular}{l l}
+\multicolumn{2}{l}{Parameter der W"armespeicher-Bedingungen}\\
+\hline
+Bezeichnung & Bedeutung \\
+\hline
+$\ahsu$ & Entladungsrate des Speichers \footnote{Selbstentladung analog zu Batterie}\\
+$\etahsuc$ & Effizienzfaktor Aufladung des Speichers  \\
+$\etahsud$ & Effizienzfaktor Entladung des Speichers  \\
+$\underline H$ & minimaler Speicherstand \\
+$\bar H$ & maximale Kapazit"at des W"armespeichers \\
+$H_{\text{start}}$& Initialwert des Speichers \\
+$\bpboil$ & maximale Aufladekapazit"at durch Boiler \\\\
+\multicolumn{2}{l}{Variablen der  W"armespeicher-Bedingungen}\\
+\hline
+Bezeichnung & Bedeutung \\
+\hline
+$H^t$ & Energiestand im Speicher \\
+$\phsuc$ & dem Speicher zugf"uhrte Energie \\
+$\pboil$ & W"arme durch Betrieb des Boilers \\
+\end{tabular}
+
+\begin{align}
+& \pboil - \bpboil \Delta t && \leq 0 \; \forall	 t \in T \label{phsuup} \\
+& \underline{H} \leq H^t \leq \bar H && \forall t \in T \label{Hbd}\\
+& \phsuc - \pchph -\pboil &&= 0 \; \forall t \in T \label{hsuinput}\\
+& H^t - (1-\ahsu) H^{t-1} + \frac{\plhm}{\etahsud} - \phsucm \etahsuc &&= 0 \; \forall t \in T^0 \label{hsubal} \\
+& H^{t_0} - H_\text{start} &&= 0 \label{inithsu}\\
+& H_\text{start} - (1-\ahsu) H^{t_e} + \frac{P^{t_e}_{\text{lh}}}{\etahsud} - P^{t_e}_{\text{hsu-c}} \etahsuc  &&\leq 0 \label{hsutermlo}\\
+& (1-\ahsu) H^{t_e} - \frac{P^{t_e}_{\text{lh}}}{\etahsud} + P^{t_e}_{\text{hsu-c}} \etahsuc - \bar H  &&\leq 0 \label{hsutermup} 
+\end{align}
+
+Falls die W"arme, die von der KWK abgegeben wird, nicht ausreichen sollte, wandelt der Boiler Strom in W"arme um. Die umgewandelte Energie wird hier mit der positiven Variable $\pboil$ bezeichnet und in (\ref{phsuup}) auf die gleiche Weise wie (\ref{pbatcup}) begrenzt. Die Gleichung (\ref{hsuinput}) beschreibt, dass sich die gespeicherte W"arme aus KWK-Erzeugung und Boilerw"arme zusammensetzt. Die letzten Bedingungen (\ref{hsutermlo})-(\ref{hsutermup}) unterscheiden sich von den der Batterie dadurch, dass anstatt der aktiven Entladung der Batterie direkt der W"armebedarf ber"ucksichtigt wird. 
+Zum Schluss gibt es noch eine weitere Gleichgewichtsbedingung f"ur den Energiehaushalt.
+\begin{align}
+& \pim - \ple - \pboil - \pbatc + \pbatd + \pchpe - \pchpex &&= 0 \; \forall t \in T \label{elecbal}
+\end{align}
+
+
+
+\subsection{Herausforderung durch zweistufiges Optimierungsproblem mit Ganzzahligkeitsbedingungen }
+
+\subsection{LP-Relaxierung und Gomory-Schnittebenen als L"osungsansatz}

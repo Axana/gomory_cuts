@@ -1,0 +1,67 @@
+\section{Mathematische Modellierung und L"osungsansatz}
+
+Im vorhergehenden Kapitel wurde ein Konzept f"ur flexible Tarifvertr"age sowie entsprechende Anforderungen beschrieben. Nun wollen wir dieses energiewirtschaftliche Idee vereinfacht als mathematisches Optimierungsproblem modellieren. Es wird sich zeigen, dass die Berechnung der optimalen Konditionen aus mathematischer Sicht eine Herausforderung darstellt, die durch die Bedingung entsteht, dass unter der Gewinnmaximierung des Retailers auch der Prosumer seine Kosten weitestgehend senken m"ochte. Dies resultiert in einem zweistufigen Problem mit Ganzzahligkeitsbedingungen f"ur den Prosumer. Zur Handhabung dieser Schwierigkeiten gibt es Methoden, die die Berechnung erleichtern k"onnen. Die werden zum Schuss dieses Kapitels kurz vorgestellt.
+
+\subsection{Mathematische Modellierung der tariflichen Anforderungen}
+Zu Beginn wollen wir den Betrieb des Inselnetzes als Optimierungsproblem aufstellen. Zur vereinfachten Modellierung gehen wir von einem Prosumer aus, der mithilfe einer Kraft-Wärme-Kopplungsanlage (KWK) sowohl W"arme als auch Energie erzeugen kann. 
+Damit kann er seinen eigenen Bedarf unmittelbar decken oder auch in entsprechenden Speichern aufbewahren. Der eigens erzeugte Strom kann aber auch aus dem Inselnetz in das allgemeine Stromnetz einspeisen werden, was dem Prosumer finanzielle Einnahmen erm"oglicht. 
+Andererseits kann er wie oben beschrieben, zu bestimmten Konditionen W"arme und Strom aus dem Netz importieren. Sein Ziel sei es nun, den eigenen finanziellen Gewinn, der sich aus der Differenz aus Einnahmen und Ausgaben errechnet, zu maximieren. Um das sp"ater auch errechnen zu k"onnen, ist es sinnvoll zuerst einen Zeitrahmen festzulegen; hier nehmen wir einen 24-st"undigen Tag und legen Zeitpunkte fest, an den der Prosumer seine Anlage steuern darf, um Einfluss auf sein eigenes Netz Einfluss nehmen zu k"onnen. 
+Dazu diskretisieren wir den Tag durch eine Menge von $k \in \mathbb{N}$ Zeitpunkten $T=\{t_0, t_1,...,t_{k-1},t_k\}$, wobei $t_0=0$ und $t_k=t_e$ den ersten bzw. letzten Zeitpunkt eines ganzen Tages darstellen. Somit ergeben sich $k+1$ Zeitpunkte pro Tag sowie $k$ Zeitabschnitte $\Delta t_i:= t_i - t_{i-1}$ f"ur $i \in \{1,...,k\}$. Hier wollen wir eine "aquidistante Verteilung der Zeitpunkte festlegen, wodurch die Abschnitte die gleiche L"ange bekommen $\Delta t \equiv \Delta t_i \, \forall i \in \{1,...,k\}$. Au"serdem wollen wir die Zeitmenge ohne den Anfangspunkt $T_0$ als $T^0=\{t_1,...,t_k\}$ definieren. 
+Im Rahmen dieser Arbeit wird die Modellierung zum im vorhergehenden Kapitel beschriebene Situation wie folgt beschrieben. Zu Zwecken der besseren Lesbarkeit betrachten wir zun"achst allein das einstufige Optimierungsproblem f"ur den Prosumer.
+
+\begin{align}
+& \max && \sum_{t \in T} \gfit \pchpex + \gsubchp \pchpe  \\ &&& - (\ggas (1 + \zeta) \frac{\pchpe}{\etachp} g^{\text{chp}} \zup + (\gtax + \gret + \gcpp) \pim ) \\
+& s.t. && \pim - \ple - \pboil - \pbatc + \pbatd + \pchpe - \pchpex &&= 0 \; \forall t \in T \label{elecbal} \\
+&&& \phsuc - \pchph -\pboil &&= 0 \; \forall t \in T \label{hsuinput}\\
+&&& E^t - (1-\abat) E^{t-1} + \frac{\pbatdm}{\etabatd} - \pbatcm \etabatc &&= 0 \; \forall t \in T^0 \label{batbal} \\
+&&& H^t - (1-\ahsu) H^{t-1} + \frac{\plhm}{\etahsud} - \phsucm \etahsuc &&= 0 \; \forall t \in T^0 \label{hsubal} \\
+&&& \zon - \zonm - \zup &&\leq 0 \; \forall t \in T^0 \label{zuplower} \\
+&&& \pchpe - \bpchpe \Delta t \zon &&\leq 0 \; \forall t \in T \label{chpeupper}\\
+&&& k \bpchpe \Delta t \zon - \pchpe &&\leq 0 \; \forall t \in T \label{chpelower}\\
+&&& \pchph - \zeta \pchpe &&\leq 0 \; \forall t \in T \label{chphupper} \\
+&&& \pchpex - \pchpe &&\leq 0 \; \forall t \in T \label{chpexupper}\\
+&&& E^{t_0} - E_\text{start} &&= 0 \label{initbat}\\
+&&& E^t \leq \bar E && \forall t \in T \label{Ebd}\\
+&&& H^{t_0} - H_\text{start} &&= 0 \label{inithsu}\\
+&&& \underline{H} \leq H^t \leq \bar H && \forall t \in T \label{Hbd}\\
+&&& H_\text{start} - (1-\ahsu) H^{t_e} + \frac{P^{t_e}_{\text{lh}}}{\etahsud} - P^{t_e}_{\text{hsu-c}} \etahsuc  &&\leq 0 \label{hsutermlo}\\
+&&& (1-\ahsu) H^{t_e} - \frac{P^{t_e}_{\text{lh}}}{\etahsud} + P^{t_e}_{\text{hsu-c}} \etahsuc  &&\leq 0 \label{hsutermup}\\
+&&& E_\text{start} - (1-\abat) H^{t_e} + \frac{P^{t_e}_{\text{bat-d}}}{\etabatd} - P^{t_e}_{\text{bat-c}} \etabatc  &&\leq 0 \label{battermlo}\\
+&&& (1-\ahsu) E^{t_e} - \frac{P^{t_e}_{\text{bat-d}}}{\etabatd} + P^{t_e}_{\text{bat-c}} \etabatc  &&\leq 0 \label{battermup} 
+\end{align}
+
+Die folgende Tabelle erl"autert die notwendigen Parameter, die im Modell verwendet werden. 
+
+\begin{tabular}{l p{6cm} l c}
+\multicolumn{4}{l}{Parameter}\\
+\hline
+Bezeichnung & Bedeutung & Einheit & Wert \\
+\hline
+$\abat$ & Entladungsrate des Energiespeichers & & $0,0002 \Delta t$ \\
+$\ahsu$ & Entradungsrate des W"armespeichers & & $0$ \\
+$\geex$ & durschnittlicher B"orsenpreis (EEX) f"ur Energie, tagesbezogen & EUR/MWh & \\
+$\gfit$ & Tarif f"ur exportierten Strom & EUR/MWh & 39,82 \\
+$\ggas$ & Preis f"ur Erdgas zum Betrieb der KWK & EUR/MWh & 73,9 \\
+$\gret$ & Preis des Stromh"andlers f"ur den Prosumer & EUR/MWh & 64,2 \\
+$\gsubchp$ & erhaltene Substitutionen f"ur Energieerzeugung mit KWK & EUR/MWh & 54,1 \\
+$\gtax$ & Steuern f"ur importierte Energie & EUR/MWh & 234,4 \\
+$\zeta$ & Verh"altnis Strom zu W"arme bei Energieerzeugung mit KWK & & 1,6 \\
+$\etabatc$ & Effizienzfaktor Aufladung des Stromspeichers & & 0,9 \\
+$\etabatd$ & Effizienzfaktor Entladung des Stromspeichers & & 0,9 \\
+$\etahsuc$ & Effizienzfaktor Aufladung des Heizspeichers & & 1,0 \\
+$\etahsud$ & Effizienzfaktor Entladung des Heizspeichers & & 1,0 \\
+$\bar E$ & maximale Kapazit"at Stromspeicher & MWh & 0,0135 \\
+$\underline{H}$ & minimale Energiemenge im Heizspeicher & MWh & 0,005973\\
+$\bar H$ & maximale Kapazit"at Heizspeicher & MWh & 0,011092 \\
+$g^{chp}$ & verbrauchte Menge Erdgas beim Hochfahren der KWK & MWh & 0,001 \\
+$k$ & Anteil von $\hpchpe$, minimale Produktionsmenge bei Betrieb der KWK & & 0,4 \\
+$\hpchpe$ & maximale Menge erzeugten Stroms mit KWK & MWh & \\
+$\bpchpe$ & maximal m"ogliche Menge erzeugten Stroms mit KWK nach Umwandlung von W"arme & MWh & 0,001 \\
+$\ple$ & Strombedarf, tagesbezogen & MWh & \\
+$\plh$ & Heizbedarf, tagesbezogen  & MWh & \\ 
+
+\end{tabular}
+
+\subsection{Herausforderung durch zweistufiges Optimierungsproblem mit Ganzzahligkeitsbedingungen }
+
+\subsection{LP-Relaxierung und Gomory-Schnittebenen als L"osungsansatz}
