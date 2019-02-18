@@ -754,6 +754,10 @@ loop(Gamma$(ord(Gamma)=card(Gamma)), gomory_P_hsu_c(Gamma) = (l_hsu_input_l.l(Ga
 gomory_right_side = sum((Gamma), l_z_up_up_bd.l(Gamma) + l_z_on_up_bd.l(Gamma) + H_max * l_H_up_bd.l(Gamma) - H_min * l_H_low_bd.l(Gamma) + E_max * l_E_up_bd.l(Gamma) + P_boiler_max * Delta_t * l_boiler_up_bd.l(Gamma) + P_bat_c_max * Delta_t * l_bat_c_up_bd.l(Gamma) + P_bat_d_max * Delta_t * l_bat_d_up_bd.l(Gamma) + P_le_total(Gamma) * (l_elec_bal_l.l(Gamma) - l_elec_bal_g.l(Gamma)) - P_lh_total(Gamma-1)$(ord(Gamma) > 1) / eta_hsu_d * (l_hsu_bal_l.l(Gamma-1)$(ord(Gamma) > 1) - l_hsu_bal_g.l(Gamma-1)$(ord(Gamma) > 1)) + H_start * (l_init_hsu_l.l$(ord(Gamma) = 1) - l_init_hsu_g.l$(ord(Gamma) = 1)) + E_start * (l_init_bat_l.l)$(ord(Gamma) = 1) - l_init_bat_g.l$(ord(Gamma) = 1)) 
 + sum(Gamma_end,(- H_start - P_lh_total(Gamma_end) / eta_hsu_d) * l_hsu_terminal_lower.l + (H_max + P_lh_total(Gamma_end) / eta_hsu_d ) * l_hsu_terminal_upper.l - E_start * l_bat_terminal_lower.l + E_max * l_bat_terminal_upper.l);
 
+file parcheck /parametercheck.csv/
+put parcheck;
+parcheck.nd=20;
+parcheck.pw=1000;
 $include calculate_parameters.dat
 
 file gompar /gomory_parameters.csv/;
