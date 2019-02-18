@@ -35,11 +35,11 @@ dualfeas_file=open("gom_dual_feasibility.dat", "w")         # dual feasibility c
 strongdual_file=open("gom_strong_duality.dat", "w")         # strong duality condition
 gams_calculation_file=open("calculate_parameters.dat","w")   # Gomory parameters to calculate by GAMS
 
-# basic strong duality
+# write strong duality conditions without cutting planes
 strong_duality="strong_duality\t.. obj_ir_lower =E= sum(Gamma, l_z_on_up_bd(Gamma) + l_z_up_up_bd(Gamma) + H_max * l_H_up_bd(Gamma) - H_min * l_H_low_bd(Gamma) + E_max * l_E_up_bd(Gamma) + P_boiler_max * Delta_t * l_boiler_up_bd(Gamma) +P_bat_c_max * Delta_t * l_bat_c_up_bd(Gamma) + P_bat_d_max * Delta_t * l_bat_d_up_bd(Gamma) + P_le_total(Gamma) * (l_elec_bal_l(Gamma) - l_elec_bal_g(Gamma)) - P_lh_total(Gamma-1)$(ord(Gamma) > 1) / eta_hsu_d * (l_hsu_bal_l(Gamma)$(ord(Gamma) > 1) - l_hsu_bal_g(Gamma)$(ord(Gamma) > 1)) - (H_start + P_lh_total(Gamma) / eta_hsu_d)$(ord(Gamma) = card(Gamma)) * l_hsu_terminal_lower + (H_max + P_lh_total(Gamma) / eta_hsu_d)$(ord(Gamma) = card(Gamma)) * l_hsu_terminal_upper) + H_start * (l_init_hsu_l - l_init_hsu_g) + E_start * (l_init_bat_l - l_init_bat_g) - E_start * l_bat_terminal_lower + E_max * l_bat_terminal_upper;"
 strongdual_file.write(strong_duality)
 
-# basic dual feasibility
+# write dual feasibility conditions without cutting planes
 dual_feasibility="dual_P_im(Gamma)\t.. l_elec_bal_l(Gamma) - l_elec_bal_g(Gamma) =G= - (gamma_tax + gamma_ret + gamma_cpp(Gamma));\ndual_P_boiler(Gamma)\t.. l_boiler_up_bd(Gamma) - (l_elec_bal_l(Gamma) - l_elec_bal_g(Gamma)) - (l_hsu_input_l(Gamma) - l_hsu_input_g(Gamma)) =G= 0;\ndual_P_chp_ex(Gamma)\t.. l_chp_ex_upper(Gamma) - (l_elec_bal_l(Gamma) - l_elec_bal_g(Gamma)) =G= gamma_chp_fit;\ndual_P_chp_e(Gamma)\t.. (l_elec_bal_l(Gamma) - l_elec_bal_g(Gamma)) + l_chp_e_upper(Gamma) - l_chp_e_lower(Gamma) - zeta * l_chp_h_upper(Gamma) - l_chp_ex_upper(Gamma) =G= gamma_chp_sub - gamma_gas * (1 + zeta) / eta_chp;\ndual_P_chp_h(Gamma)\t.. l_chp_h_upper(Gamma) - (l_hsu_input_l(Gamma) - l_hsu_input_g(Gamma)) =G= 0;\ndual_P_hsu_c(Gamma)\t.. (l_hsu_input_l(Gamma) - l_hsu_input_g(Gamma)) - eta_hsu_c * (l_hsu_bal_l(Gamma + 1)$(ord(Gamma) < card(Gamma)) - l_hsu_bal_g(Gamma + 1)$(ord(Gamma) < card(Gamma))) +  eta_hsu_c * (l_hsu_terminal_upper - l_hsu_terminal_lower)$(ord(Gamma) = card(Gamma))  =G= 0;\ndual_H(Gamma)\t.. l_H_up_bd(Gamma) - l_H_low_bd(Gamma) + (l_init_hsu_l$(ord(Gamma) = 1) - l_init_hsu_g$(ord(Gamma) = 1)) + (l_hsu_bal_l(Gamma)$(ord(Gamma) > 1) - l_hsu_bal_g(Gamma)$(ord(Gamma) > 1)) - (1-alpha_hsu) * (l_hsu_bal_l(Gamma + 1)$(ord(Gamma) < card(Gamma)) - l_hsu_bal_g(Gamma + 1)$(ord(Gamma) < card(Gamma))) + (1-alpha_hsu) * (l_hsu_terminal_upper - l_hsu_terminal_lower)$(ord(Gamma) = card(Gamma)) =G= 0;\ndual_E(Gamma)\t.. l_E_up_bd(Gamma) + (l_init_bat_l$(ord(Gamma) = 1) - l_init_bat_g$(ord(Gamma) = 1)) + (l_bat_bal_l(Gamma)$(ord(Gamma) > 1) - l_bat_bal_g(Gamma)$(ord(Gamma) > 1)) - (1-alpha_bat) * (l_bat_bal_l(Gamma + 1)$(ord(Gamma) < card(Gamma)) - l_bat_bal_g(Gamma + 1)$(ord(Gamma) < card(Gamma))) + (1-alpha_bat) * (l_bat_terminal_upper - l_bat_terminal_lower)$(ord(Gamma) = card(Gamma)) =G= 0;\ndual_P_bat_c(Gamma)\t.. l_bat_c_up_bd(Gamma) - (l_elec_bal_l(Gamma) - l_elec_bal_g(Gamma)) - eta_bat_c * (l_bat_bal_l(Gamma + 1)$(ord(Gamma) < card(Gamma)) - l_bat_bal_g(Gamma + 1)$(ord(Gamma) < card(Gamma))) + eta_bat_c * (l_bat_terminal_upper - l_bat_terminal_lower)$(ord(Gamma) = card(Gamma))  =G= 0;\ndual_P_bat_d(Gamma)\t.. l_bat_d_up_bd(Gamma) + (l_elec_bal_l(Gamma) - l_elec_bal_g(Gamma)) + (l_bat_bal_l(Gamma + 1)$(ord(Gamma) < card(Gamma)) - l_bat_bal_g(Gamma + 1)$(ord(Gamma) < card(Gamma))) / eta_bat_d + (l_bat_terminal_lower - l_bat_terminal_upper)$(ord(Gamma) = card(Gamma)) / eta_bat_d  =G= 0;\ndual_z_on(Gamma)\t.. l_z_on_up_bd(Gamma) + l_z_up_lower(Gamma) - l_z_up_lower(Gamma + 1)$(ord(Gamma) < card(Gamma)) - P_chp_e_max * Delta_t * l_chp_e_upper(Gamma) + k * P_chp_e_max * Delta_t * l_chp_e_lower(Gamma) =G= 0;\ndual_z_up(Gamma)\t.. l_z_up_up_bd(Gamma) - l_z_up_lower(Gamma) =G= - gamma_gas * g_chp;"
 dualfeas_file.write(dual_feasibility)
 
@@ -85,23 +85,31 @@ def main():
     gams_data_preparateur = GamsDataPreparateur(arguments)
     nr_time_intervals = gams_data_preparateur.prepare_data()
     
+    # run GAMS prosumer IP once
+    gams_log_filename = arguments["gams_input_file_prosumer"] + ".log"
+    # nr_time_intervals[0] = int(24 * 60 / 15.) - 1
+    if arguments["logging"] == "yes":
+        with open(gams_log_filename, "w") as gams_log_file:
+            gams_process = subprocess.Popen(["gams", (arguments["gams_input_file_prosumer"] + ".gms"), "lo=3",
+                                        "u1=" + str(nr_time_intervals[0]), "u2=" + str(nr_time_intervals[1])],
+                                        stdout=gams_log_file,
+                                        stderr=subprocess.STDOUT)
+            gams_process.communicate()
+    else:
+        gams_process = subprocess.Popen(["gams", (arguments["gams_input_file_prosumer"] + ".gms"), "lo=3",
+                                        "u1=" + str(nr_time_intervals[0]), "u2=" + str(nr_time_intervals[1])])
+        gams_process.communicate()
+        
+        #move results for prosumer IP to result folder
+    shutil.move((arguments["gams_input_file_prosumer"] + ".log"), full_result_dir_path)
+    shutil.move((arguments["gams_input_file_prosumer"] + ".lst"), full_result_dir_path)
+    shutil.move((arguments["gams_input_file_prosumer"] + ".dat"), full_result_dir_path)
+    shutil.move((arguments["gams_input_file_prosumer"] + ".csv"), full_result_dir_path)
+        
+    # loop run GAMS models
     def run_gams():
         print("Initiate GAMS model.")
-        # run GAMS prosumer model
-        gams_log_filename = arguments["gams_input_file_prosumer"] + ".log"
-        # nr_time_intervals[0] = int(24 * 60 / 15.) - 1
-        if arguments["logging"] == "yes":
-            with open(gams_log_filename, "w") as gams_log_file:
-                gams_process = subprocess.Popen(["gams", (arguments["gams_input_file_prosumer"] + ".gms"), "lo=3",
-                                            "u1=" + str(nr_time_intervals[0]), "u2=" + str(nr_time_intervals[1])],
-                                            stdout=gams_log_file,
-                                            stderr=subprocess.STDOUT)
-                gams_process.communicate()
-        else:
-            gams_process = subprocess.Popen(["gams", (arguments["gams_input_file_prosumer"] + ".gms"), "lo=3",
-                                            "u1=" + str(nr_time_intervals[0]), "u2=" + str(nr_time_intervals[1])])
-            gams_process.communicate()
-
+        
         # run GAMS bilevel model
         gams_log_filename = arguments["gams_input_file_bilevel"] + ".log"
         # nr_time_intervals[0] = int(24 * 60 / 15.) - 1
@@ -115,7 +123,8 @@ def main():
         else:
             gams_process = subprocess.Popen(["gams", (arguments["gams_input_file_bilevel"] + ".gms"), "lo=3",
                                             "u1=" + str(nr_time_intervals[0]), "u2=" + str(nr_time_intervals[1])])
-            gams_process.communicate()    
+            gams_process.communicate()
+            
             # run GAMS lower level with values for upper level variables taken from the bilevel solution
         gams_log_filename = arguments["gams_input_file_feas_test"] + ".log"
         # nr_time_intervals[0] = int(24 * 60 / 15.) - 1
@@ -130,15 +139,49 @@ def main():
             gams_process = subprocess.Popen(["gams", (arguments["gams_input_file_feas_test"] + ".gms"), "lo=3",
                                             "u1=" + str(nr_time_intervals[0]), "u2=" + str(nr_time_intervals[1])])
             gams_process.communicate()
+            
+        # run prosumer LP-relaxation for duality test
+        gams_log_filename = arguments["gams_input_prosumer_LP"] + ".log"
+        # nr_time_intervals[0] = int(24 * 60 / 15.) - 1
+        if arguments["logging"] == "yes":
+            with open(gams_log_filename, "w") as gams_log_file:
+                gams_process = subprocess.Popen(["gams", (arguments["gams_input_prosumer_LP"] + ".gms"), "lo=3",
+                                            "u1=" + str(nr_time_intervals[0]), "u2=" + str(nr_time_intervals[1])],
+                                            stdout=gams_log_file,
+                                            stderr=subprocess.STDOUT)
+                gams_process.communicate()
+        else:
+            gams_process = subprocess.Popen(["gams", (arguments["gams_input_prosumer_LP"] + ".gms"), "lo=3",
+                                            "u1=" + str(nr_time_intervals[0]), "u2=" + str(nr_time_intervals[1])])
+            gams_process.communicate()
+            
+        duality_test()
+            
         return
- 
+
     # relevant variables linked to matrix columns 
     colvar=['P_im', 'P_chp_h', 'P_chp_e', 'z_on', 'z_up', 'P_bat_c', 'P_bat_d', 'E' , 'P_boiler', 'H', 'P_chp_ex', 'P_hsu_c' ]
 
-        
+    def duality_test():
+        LP_log_data=open(arguments["gams_input_prosumer_LP"] + ".log","r")
+        bilevel_log_data=open(arguments["gams_input_file_feas_test"] + ".log","r")
+        for line in LP_log_data:
+            if line.split(":")[0] == "Objective ": 
+                LP_obj = line.split(":")[1]
+                print("LP output ",LP_obj)
+        for line in bilevel_log_data:
+            if line.split(":")[0] == "Objective ": 
+                bilevel_prosumer_obj = line.split(":")[1]
+                print("bilevel output ",bilevel_prosumer_obj)
+        if LP_obj == bilevel_prosumer_obj:
+            print("strong duality test positive.")
+        else:
+            print("strong duality test failed!")
+        return()
+                
     def restart():# read GAMS results
         run_gams()
-        data_name="ip_follower_IP_leader_"+ arguments["tariff_type"]+"_M0.csv"
+        data_name=arguments["gams_input_file_bilevel"]+".csv"
         gms_results = pandas.read_csv(data_name, 
                         sep=";", na_values="-", keep_date_col=True, header=0, index_col=0, encoding='utf-8-sig')
         return int_check(gms_results)    
@@ -164,24 +207,22 @@ def main():
     # Gomory cutting plane method
     def create_gomorycut(solution):
         
-        vardef_file=open("gom_dual_variables_definition.dat", "a")  # defining dual variables for cutting plane
-        equationdef_file=open("gom_equations_definition.dat", "a")  # defining cutting plane
+        vardef_file=open("gom_dual_variables_definition.dat", "a")  # define dual variables for cutting plane
+        equationdef_file=open("gom_equations_definition.dat", "a")  # define cutting plane
         parameter_file=open("gom_cut_parameters.dat", "a")          # parameters for cutting plane
-        cut_file=open("gom_cutting_planes.dat", "a")                # specify cutting plane
+        cut_file=open("gom_cutting_planes.dat", "a")                # describe cutting plane
         
         
-        # read_gms_data():
+        # read Gomory cut parameters GAMS output
         gomory_cut_parameter_file="gomory_parameters.csv"
         gom_par=pandas.read_csv(gomory_cut_parameter_file, delimiter=";", index_col="Variable")
         
         vector=np.asarray(gom_par["gomory_cut_value"])
         gomory_vector=np.floor(vector)# gomory parameters as vector for cut test
-        
         vardef_file.write("\n positive variables \t l_gomory_cut_" + str(cutcounter) + "\t dual variable for gomory cut; \n")
         equationdef_file.write("equations \t gomory_cut_" + str(cutcounter) + ";\n")
         cut_file.write("gomory_cut_" + str(cutcounter) + " .. sum(Gamma, " )
         variable_type=""
-        
         for variable in gom_par.index:
             if variable!="right_side":
                 if variable_type != variable.split("(")[0]:
@@ -209,29 +250,29 @@ def main():
         
         save_result_dir=os.path.join(full_result_dir_path, ("result_gomory_cut" + str(cutcounter-1) + "/"))
         os.mkdir(save_result_dir)
-        shutil.move(("values_of_dual_variables_for_bounds.dat"), save_result_dir)
-        shutil.move((arguments["gams_input_file_prosumer"] + ".lst"), save_result_dir)
+        
+        shutil.move((arguments["gams_input_file_bilevel"] + ".log"), save_result_dir)
+        shutil.move((arguments["gams_input_file_feas_test"] + ".log"), save_result_dir)
+        shutil.move((arguments["gams_input_prosumer_LP"] + ".log"), save_result_dir)
         shutil.move((arguments["gams_input_file_bilevel"] + ".lst"), save_result_dir)
         shutil.move((arguments["gams_input_file_feas_test"] + ".lst"), save_result_dir)
-        shutil.move((arguments["gams_input_file_prosumer"] + ".dat"), save_result_dir)
+        shutil.move((arguments["gams_input_prosumer_LP"] + ".lst"), save_result_dir)
         shutil.move((arguments["gams_input_file_bilevel"] + ".dat"), save_result_dir)
         shutil.move((arguments["gams_input_file_feas_test"] + ".dat"), save_result_dir)
-        shutil.move((arguments["gams_input_file_prosumer"] + ".csv"), save_result_dir)
+        shutil.move((arguments["gams_input_prosumer_LP"] + ".dat"), save_result_dir)
         shutil.move((arguments["gams_input_file_bilevel"] + ".csv"), save_result_dir)
         shutil.move((arguments["gams_input_file_feas_test"] + ".csv"), save_result_dir)
-    
+        shutil.move((arguments["gams_input_prosumer_LP"] + ".csv"), save_result_dir)
         restart()
         return
     
     def cuttest(gom_vector,solution):
         par_sol= np.array(solution,dtype=float)
-        #print(gom_vector)
-        #print(par_sol)
         multiply=np.inner(gom_vector,par_sol)
         if multiply > 0: 
-            print("difference: ",multiply)
+            print("Cut test POSITIVE. Difference: ",multiply)
         else: 
-            print("cut did not apply correctly! ", multiply)
+            print("Cut test NEGATIVE. Difference: ", multiply)
     
     def rewrite_dual_feasibility(number):
         dfstr=""
@@ -243,6 +284,7 @@ def main():
             dfstr+=newline
         with open("gom_dual_feasibility.dat","w") as rewritedf:
             rewritedf.write(dfstr)
+            rewritedf.close()
         return
     
     def rewrite_strong_duality(number):
@@ -251,12 +293,17 @@ def main():
             newline=line[:-1]+ " + gomory" + str(cutcounter) + "_right_side * l_gomory_cut_" + str(number) + ";"
         with open("gom_strong_duality.dat","w") as rewritesd:
             rewritesd.write(newline)
+            rewritesd.close()
         return
 
     def rewrite_parameter_calculation(number):
         with open("calculate_parameters.dat","a") as pfile:
+            pfile.write("put l_gomory_cut_" + str(cutcounter) + ",@20,l_gomory_cut_" + str(cutcounter) + ".l /;\n")
             for var in colvar:
-                pfile.write("put l_gomory_cut_" + str(cutcounter) + ",@20,l_gomory_cut_" + str(cutcounter) + ".l /; \nloop(Gamma,  gomory_" + var + "(Gamma) = gomory_" + var + "(Gamma) + gomory" + str(cutcounter) + "_" + var + "(Gamma) * l_gomory_cut_" + str(cutcounter) + ".l);\n" )
+                pfile.write("loop(Gamma, put " + var + "(Gamma),';', gomory_" + var + "(Gamma),';'; gomory_" + var + "(Gamma) = gomory_" + var + "(Gamma) + gomory" + str(cutcounter) + "_" + var + "(Gamma) * l_gomory_cut_" + str(cutcounter) + ".l; put gomory_" + var + "(Gamma)/;);\n" )
+            pfile.write("put 'right_side',';',gomory_right_side,';'; gomory_right_side = gomory_right_side + gomory" + str(cutcounter) + "_right_side * l_gomory_cut_" + str(cutcounter) + ".l; put gomory_right_side /;\n" )
+            pfile.close()
+                
         return
         
     restart()
